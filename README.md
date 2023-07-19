@@ -1,2 +1,2 @@
-# thesis
+# Improving Knowledge Distillation
 Thesis implementation
