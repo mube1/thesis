@@ -15,8 +15,8 @@ run python train.py with the following arguments : <br/>
   - batch size <br/>
   - epochs <br/>
   - optimizer <br/>
-  > temperature <br/>
-  > etc .. <br/>
+  - temperature <br/>
+  - etc .. <br/>
   
 
    
