@@ -41,7 +41,7 @@ def get_arguments():
     parser.add_argument('--batch_size', type=int, default=BATCH_SIZE,
                         help='How many wav files to process at once. Default: ' + str(BATCH_SIZE) + '.')
   
-    parser.add_argument('--logdir_root', type=str, default=None,
+    parser.add_argument('--logdir_root', type=str, default=None, 
                         help='Root directory to place the logging '
                         'output and generated model. These are stored '
                         'under the dated subdirectory of --logdir_root. '
@@ -57,7 +57,7 @@ def get_arguments():
     parser.add_argument('--optimizer', type=str, default='adam', choices=['adam','sgd'],
                         help='Select the optimizer specified by this option. Default: adam.')
     
-    parser.add_argument('--scheduler', type=str, default=None, choices=['CosineAnnealingLR','OneCycleLR'],
+    parser.add_argument('--scheduler', type=str, default=None, choices=['cosine','onecycle'],
                         help='Select the scheduler specified by this option. Default: None.')
    
     
@@ -208,6 +208,11 @@ def main():
   student=m.get_models(args.student,args.dataset)
   optimizer = get_optimizer(student,args.optimizer,args.learning_rate)
 
+  if args.scheduler=='cosine':
+      scheduler=torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=100, eta_min=0.0001)
+  elif args.scheduler=='onecycle':
+      scheduler=torch.optim.lr_scheduler.OneCycleLR(optimizer, args.learning_rate, args.epochs, steps_per_epoch=len(train_loader))
+
   train(
         args.student, # 
         args.teacher,  # 
@@ -219,7 +224,7 @@ def main():
         args.loss, # 
         train_loader, # 
         test_loader, # 
-        args.scheduler, # 
+        scheduler, # 
         args.temperature
 
          )
